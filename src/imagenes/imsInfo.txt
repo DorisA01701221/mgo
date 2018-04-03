@@ -1,0 +1,18 @@
+
+// imsInfo.txt images
+
+o background.png 
+o segundo1.png
+o segundo2.png
+o segundo3.png
+o segundo4.png
+o segundo5.png
+
+
+n nombre*.png  6
+
+
+g nombre  left.png right.png still.png up.png
+
+s nombre.png 8
+s cats.gif 6
