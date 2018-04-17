@@ -1,9 +1,15 @@
 package states;
 
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+
 import interfaz.GameState;
+import singletons.ImageLoader;
 import singletons.StateFactory;
 
 public class GameContext {
+	private ImageLoader imsLoader= ImageLoader.getImageLoader();
+	private BufferedImage bg =imsLoader.getImage("background");
 	private StateFactory factory;
 		
 	public GameContext() {
@@ -27,5 +33,12 @@ public class GameContext {
 	public void setCurrent(GameState gs) {
 		factory.setCurrent(gs);
 	}
-	//poner update y render
+	public void update() {
+		factory.getCurrent().update();
+	}
+	public void render(Graphics g){
+		g.drawImage(bg, 0, 0,null);
+		factory.getCurrent().render(g);
+		
+	}
 }

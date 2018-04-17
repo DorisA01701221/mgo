@@ -1,8 +1,22 @@
-
 // imsInfo.txt images
 
-o background.png 
+o background.png
 
-n segundo*.png  6
+o cerdo.png
+o gusano.png 
+o jirafa.png 
+o rino.png 
+o tortuga.png
+o vaca.jpg 
+
+o segundo0.png
+o segundo1.png
+o segundo2.png
+o segundo3.png
+o segundo4.png
+o segundo5.png
+
+
+ 
 
 

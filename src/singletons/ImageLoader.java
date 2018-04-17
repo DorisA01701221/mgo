@@ -7,7 +7,7 @@ import javax.imageio.*;
 import javax.swing.*; 
 
 public class ImageLoader {
-	private final static String IMAGE_DIR = "Imagenes/";
+	private final static String IMAGE_DIR = "/imagenes/";
 	private HashMap imagesMap;
 	private HashMap gNamesMap;
 	private GraphicsConfiguration gc;
@@ -27,7 +27,7 @@ public class ImageLoader {
 	}
 	public static ImageLoader getImageLoader() {
 		if (loader == null) {
-			loader= new ImageLoader();
+			loader = new ImageLoader("imsInfo.txt");
 		} return loader;
 	}
 	private void initLoader(){

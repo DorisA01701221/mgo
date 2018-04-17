@@ -57,5 +57,8 @@ public class StateFactory {
 	public void setCurrent(GameState gs) {
 		this.current=gs;
 	}
+	public GameState getCurrent() {
+		return current;
+	}
 	
 }
