@@ -1,13 +1,30 @@
 // imsInfo.txt images
+o ask.png
+o avatar1.png
+o avatar2.png
+o avatar3.png
+o avatar4.png
+o avatar5.png
 
 o background.png
 
+o c.png
 o cerdo.png
-o gusano.png 
-o jirafa.png 
-o rino.png 
+
+o g.png
+o gusano.png
+
+o j.png
+o jirafa.png
+
+o r.png
+o rino.png
+
+o t.png
 o tortuga.png
-o vaca.jpg 
+
+o v.png
+o vaca.jpg
 
 o segundo0.png
 o segundo1.png
@@ -15,8 +32,3 @@ o segundo2.png
 o segundo3.png
 o segundo4.png
 o segundo5.png
-
-
- 
-
-

@@ -1,8 +1,9 @@
 /.DS_Store
-/Running.class
 /ImageLoader.class
+/Running.class
 /imagenes/
-/singletons/
-/states/
+/imagenesTeam/
 /interfaz/
 /main/
+/singletons/
+/states/
