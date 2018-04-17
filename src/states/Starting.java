@@ -19,7 +19,7 @@ public class Starting implements GameState {
 		segundos= 6;
 	}
 	public void  starting() {
-		if(segundos == -1) {
+		if(segundos < 0) {
 			gc.setCurrent(gc.getTurno1());
 		}else {
 			segundo=imsLoader.getImage("segundo"+ Integer.toString(segundos));
@@ -59,7 +59,7 @@ public class Starting implements GameState {
 			Logger.getLogger(Starting.class.getName()).log(Level.SEVERE, null, ex);
 		}
 		
-		segundos--;
+		segundos -= 1;
 		starting();
 	}
 

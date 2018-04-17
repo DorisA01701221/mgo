@@ -36,7 +36,7 @@ public class Panel extends JPanel implements Runnable{
 
 
 	public Panel() {
-		imsLoader=ImageLoader.getImageLoader();
+		imsLoader = ImageLoader.getImageLoader();
 		setBackground(Color.white);
 		setPreferredSize(new Dimension(PWIDTH,PHEIGHT));
 		setFocusable(true);
