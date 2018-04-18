@@ -20,7 +20,7 @@ public class GameContext {
 		x=-1;
 		y=-1;
 		bg =imsLoader.getImage("background");
-		HUDcorrecto= imsLoader.getImage("HUDcorrecto");
+		HUDcorrecto= imsLoader.getImage("HUD");
 		factory = StateFactory.getStateFactory(this);
 		
 	}
@@ -48,7 +48,7 @@ public class GameContext {
 	public void render(Graphics g){
 		g.drawImage(bg, 0, 0,null);
 		//aqui aparece el HUD
-		g.drawImage(HUDcorrecto,5,5,856,42, null);
+		//g.drawImage(HUDcorrecto,5,5,856,42, null);
 		factory.getCurrent().render(g);
 		
 		

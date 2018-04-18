@@ -17,7 +17,7 @@ o gusano.png
 o j.png
 o jirafa.png
 
-o HUDcorrecto.png
+o hud.png
 
 o r.png
 o rino.png

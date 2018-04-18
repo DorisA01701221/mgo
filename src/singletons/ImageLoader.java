@@ -17,14 +17,17 @@ public class ImageLoader {
 		initLoader();
 		loadImagesFile(fnm);
 	}
+	
 	private ImageLoader(){ 
 		initLoader();  
 	} 
+	
 	public static ImageLoader getImageLoader(String fnm) {
 		if (loader == null) {
 			loader= new ImageLoader(fnm);
 		} return loader;
 	}
+	
 	public static ImageLoader getImageLoader() {
 		if (loader == null) {
 			loader = new ImageLoader("imsInfo.txt");
@@ -383,8 +386,7 @@ public class ImageLoader {
 	}
 	public BufferedImage loadImage(String fnm) {
 		try {
-			BufferedImage im =  ImageIO.read( 
-					getClass().getResource(IMAGE_DIR + fnm) );
+			BufferedImage im =  ImageIO.read(getClass().getResource(IMAGE_DIR + fnm) );
 			int transparency = im.getColorModel().getTransparency();
 			BufferedImage copy =  gc.createCompatibleImage(
 					im.getWidth(), im.getHeight(),
