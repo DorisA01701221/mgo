@@ -8,6 +8,8 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -121,27 +123,16 @@ public class Panel extends JPanel implements Runnable{
 		}
 	}
 	private void readyForTermination() {
-		addKeyListener( new KeyAdapter() { // listen for esc, q, end, ctrl-c
-			public void keyPressed(KeyEvent e) { 
-				int keyCode = e.getKeyCode();
-				if ((keyCode == KeyEvent.VK_ESCAPE) ||
-						(keyCode == KeyEvent.VK_Q) ||
-						(keyCode == KeyEvent.VK_END) ||
-						((keyCode == KeyEvent.VK_C) && e.isControlDown()) ) {
-					running = false;
-				}
-/*
-				if(keyCode == KeyEvent.VK_RIGHT)
-					context.setKeyEvent(keyCode);
-				if(keyCode == KeyEvent.VK_DOWN)
-					context.setKeyEvent(keyCode);
-				if(keyCode == KeyEvent.VK_LEFT)
-					context.setKeyEvent(keyCode);
-				if(keyCode == KeyEvent.VK_UP)
-					context.setKeyEvent(keyCode);
-					*/
-			} 
-		});
+		addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int x = e.getX();
+                int y = e.getY();
+
+                context.setX(x);
+                context.setY(y);
+            }
+        });
 	}
 	public static void main(String args[]){
 		 JFrame app = new JFrame("Test");

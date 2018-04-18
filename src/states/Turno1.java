@@ -2,29 +2,43 @@ package states;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import extras.Animal;
 import interfaz.GameState;
 import singletons.ImageLoader;
 
 public class Turno1 implements GameState{
 	private GameContext gc;//cambio de estados
 	private ImageLoader img;
-	private BufferedImage cerdo, jirafa, vaca, ask, c,j,v, avatar1, avatar3, avatar4, avatar5;
+	private BufferedImage  ask, avatar1, avatar4;
+	private BufferedImage[] letras;
+	private Animal cerdo, jirafa, vaca;
+	private int selectLetra;
+	private int correct;
 	public Turno1(GameContext gc) {
 		this.gc=gc;
 		//accediendo a imageloader
 		img=ImageLoader.getImageLoader();
-		cerdo =  img.getImage("cerdo");
-		jirafa = img.getImage("jirafa");
-		vaca = img.getImage("vaca");
+		cerdo =  new Animal(img.getImage("cerdo"),100, 60,121 , 121);
+		jirafa = new Animal(img.getImage("jirafa") ,373, 60,121 , 121 );
+		vaca = new Animal(img.getImage("vaca"),645, 60, 121 , 121);
+		
 		ask = img.getImage("ask");
-		c = img.getImage("c");
-		j = img.getImage("j");
-		v = img.getImage("v");
+		
 		avatar1 = img.getImage("avatar1");
-		avatar3 = img.getImage("avatar3");
 		avatar4 = img.getImage("avatar4");
-		avatar5 = img.getImage("avatar5");
+		//random de letra 
+		letras= new BufferedImage[3];
+		letras[0]=img.getImage("c");
+		letras[1]=img.getImage("j");
+		letras[2]=img.getImage("v");
+		// es *2porque elarreglo llega hasta 2
+		selectLetra = (int)(Math.random()*2);
+		
+		//variable para saber si laimagen esta correcta
+		correct=-1;
 	}
 
 	@Override
@@ -52,24 +66,55 @@ public class Turno1 implements GameState{
 
 	@Override
 	public void render(Graphics g) {
-	//dibuja la imagen si hay algo que no se dibujó no se renderisa
-		g.drawImage(cerdo, 100, 60,121 , 121, null);
-		g.drawImage(jirafa,373, 60,121 , 121,null);
-		g.drawImage(vaca, 645, 60, 121 , 121,null);
-		g.drawImage(ask, 0, 0, null);
-		//g.drawImage(c, 0, 0, null);
-		//g.drawImage(j, 0, 0, null);
-		//g.drawImage(v, 0, 0, null);
-		//g.drawImage(avatar1, 0, 0, null);
-		//g.drawImage(avatar3, 0, 0, null);
-		//g.drawImage(avatar4, 0, 0, null);
-		//g.drawImage(avatar5, 0, 0, null);
+		//dibuja la imagen si hay algo que no se dibujó no se renderisa
+		g.drawImage(cerdo.getImgAnimal(), cerdo.getX(), cerdo.getY(), cerdo.getWidth(), cerdo.getHeight(), null);
+		g.drawImage(jirafa.getImgAnimal(),jirafa.getX(),jirafa.getY(), jirafa.getWidth(), jirafa.getHeight(), null);
+		g.drawImage(vaca.getImgAnimal(), vaca.getX(), vaca.getY(), vaca.getWidth(), vaca.getHeight(),null);
+		g.drawImage(ask, 213, 201, null);
+		//aqui dibuja la letra
+		g.drawImage(letras[selectLetra], 404, 260, 58, 80, null);
+		
+		if(correct == 1) {
+			g.drawImage(avatar1, 0,245, 200, 200,null);
+		}
+		if(correct ==0) {
+			g.drawImage(avatar4, 0, 245,200,200,null);
+		}
+		
+		
 	}
 
 	@Override
 	public void update() {
-	//actualiza
-
+		//actualiza
+		//
+		if(gc.getX() != -1 && gc.getY()!=-1) {
+			//si esta en cerdo
+			if(cerdo.getRec().contains(gc.getX(), gc.getY())) {
+				if(selectLetra == 0) {
+					correct = 1;
+				}else {
+					correct= 0;
+				}
+			}
+			if(jirafa.getRec().contains(gc.getX(), gc.getY())) {
+				if(selectLetra == 1) {
+					correct = 1;
+				}else {
+					correct= 0;
+				}
+			}
+			if(vaca.getRec().contains(gc.getX(), gc.getY())) {
+				if(selectLetra == 2) {
+					correct = 1;
+				}else {
+					correct= 0;
+				}
+			}
+			//reinicia context a que no se ha oprimido nada
+			gc.setX(-1);
+			gc.setY(-1);
+		}
 	}
 
 }
