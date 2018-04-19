@@ -19,6 +19,13 @@ o jirafa.png
 
 o hud.png
 
+o overU.png
+o overE.png
+
+o pausa.png
+o pausaB.png
+O playB.png
+
 o r.png
 o rino.png
 
@@ -27,7 +34,9 @@ o tortuga.png
 
 o v.png
 o vaca.jpg
+o volverB.png
 
+o salirB.png
 o segundo0.png
 o segundo1.png
 o segundo2.png

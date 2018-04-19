@@ -24,7 +24,7 @@ public class ImageLoader {
 	
 	public static ImageLoader getImageLoader(String fnm) {
 		if (loader == null) {
-			loader= new ImageLoader(fnm);
+			loader= new ImageLoader();
 		} return loader;
 	}
 	
@@ -93,6 +93,7 @@ public class ImageLoader {
 		}
 
 		BufferedImage bi = loadImage(fnm);
+		
 		if (bi != null) {
 			ArrayList imsList = new ArrayList();
 			imsList.add(bi);
@@ -103,6 +104,7 @@ public class ImageLoader {
 		else
 			return false; 
 	}
+	
 	private String getPrefix(String fnm) {
 		int posn;
 		if ((posn = fnm.lastIndexOf(".")) == -1) {
