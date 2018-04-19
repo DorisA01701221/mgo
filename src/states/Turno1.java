@@ -15,7 +15,7 @@ public class Turno1 implements GameState{
 	private ImageLoader img;
 	private BufferedImage  ask, avatar1, avatar4, hud;
 	private BufferedImage[] letras;
-	private Animal cerdo, jirafa, vaca;
+	private Animal cerdo, jirafa, vaca,salir, pause;//botones y colisiones
 	private int selectLetra;
 	private int correct;
 	private int vidas;
@@ -28,6 +28,7 @@ public class Turno1 implements GameState{
 		vaca = new Animal(img.getImage("vaca"),645, 60, 121 , 121);
 		//va a tener 3 vidas
 		vidas= 3;
+		pause= new Animal(img.getImage("pausaB"),412,385,41,41);
 
 		ask = img.getImage("ask");
 		//poner hud
@@ -57,8 +58,7 @@ public class Turno1 implements GameState{
 
 	@Override
 	public void pause() {
-
-
+		gc.setCurrent(gc.getPaused());
 	}
 
 	@Override
@@ -74,11 +74,14 @@ public class Turno1 implements GameState{
 
 	@Override
 	public void render(Graphics g) {
+		
 		//dibuja la imagen si hay algo que no se dibujó no se renderisa
 		g.drawImage(cerdo.getImgAnimal(), cerdo.getX(), cerdo.getY(), cerdo.getWidth(), cerdo.getHeight(), null);
 		g.drawImage(jirafa.getImgAnimal(),jirafa.getX(),jirafa.getY(), jirafa.getWidth(), jirafa.getHeight(), null);
 		g.drawImage(vaca.getImgAnimal(), vaca.getX(), vaca.getY(), vaca.getWidth(), vaca.getHeight(),null);
 		g.drawImage(ask, 213, 201, null);
+		//se muestra el boton de pausa
+		g.drawImage(img.getImage("pausaB"), 412, 385, null);
 		//aqui dibuja la letra
 		g.drawImage(letras[selectLetra], 404, 260, 58, 80, null);
 		//aqui aparece el hud
@@ -157,6 +160,14 @@ public class Turno1 implements GameState{
 					vidas--;//quitar vidas
 				}
 			}
+			//detectar colisiones del boton pausa
+			if(pause.getRec().contains(gc.getX(),gc.getY())) {
+				gc.setX(-1);
+				gc.setY(-1);
+				gc.setResume(1);
+				pause();
+			}
+			
 			//reinicia context a que no se ha oprimido nada
 			gc.setX(-1);
 			gc.setY(-1);

@@ -15,7 +15,7 @@ public class Turno2 implements GameState{
 	private ImageLoader img;
 	private BufferedImage  ask, avatar3, avatar5, hud;
 	private BufferedImage[] letras;
-	private Animal gusano, tortuga, rino;
+	private Animal gusano, tortuga, rino, pause;//botones y colisiones
 	private int selectLetra;
 	private int correct;
 	private int vidas;
@@ -27,11 +27,13 @@ public class Turno2 implements GameState{
 		gusano =  new Animal(img.getImage("gusano"),100, 60,121 , 121);
 		tortuga = new Animal(img.getImage("tortuga") ,373, 60,121 , 121 );
 		rino = new Animal(img.getImage("rino"),645, 60, 121 , 121);
+		
 		vidas=3; //va a tener 3 vidas
-		//accediendo a la pregunta
-		ask = img.getImage("ask");
-		//poner hud
-		hud= img.getImage("hud");
+		pause= new Animal(img.getImage("pausaB"),412,385,41,41);
+		
+		ask = img.getImage("ask");//accediendo a la pregunta
+		
+		hud= img.getImage("hud");//poner hud
 		//poner avatar feliz y triste del pony
 		avatar3 = img.getImage("avatar3");
 		avatar5 = img.getImage("avatar5");
@@ -53,8 +55,7 @@ public class Turno2 implements GameState{
 
 	@Override
 	public void pause() {
-
-
+		gc.setCurrent(gc.getPaused());
 	}
 
 	@Override
@@ -74,6 +75,8 @@ public class Turno2 implements GameState{
 		g.drawImage(tortuga.getImgAnimal(),tortuga.getX(),tortuga.getY(), tortuga.getWidth(), tortuga.getHeight(), null);
 		g.drawImage(rino.getImgAnimal(), rino.getX(), rino.getY(), rino.getWidth(), rino.getHeight(),null);
 		g.drawImage(ask, 213, 201, null);
+		//se muestra el boton de pausa
+		g.drawImage(img.getImage("pausaB"), 412, 385, null);
 		//aqui dibuja la letra
 		g.drawImage(letras[selectLetra], 404, 260, 58, 80, null);
 		//aqui aparece el hud
@@ -156,6 +159,14 @@ public class Turno2 implements GameState{
 					vidas--; //quitar vidas
 				}
 			}
+			//detectar colisiones del boton pausa
+			if(pause.getRec().contains(gc.getX(),gc.getY())) {
+				gc.setX(-1);
+				gc.setY(-1);
+				gc.setResume(2);
+				pause();
+			}
+			
 			gc.setX(-1);
 			gc.setY(-1);
 		}

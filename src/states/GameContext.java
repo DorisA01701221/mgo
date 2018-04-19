@@ -16,18 +16,27 @@ public class GameContext {
 	private int y;
 	private ArrayList<Integer> correctasPlayer1;
 	private ArrayList<Integer> correctasPlayer2;	
+	private int resume;
 
 	public GameContext() {
 		//es de que no he reconocido un click
 		x=-1;
 		y=-1;
-
+		
+		resume=-1;
+		
 		bg =imsLoader.getImage("background");
 		factory = StateFactory.getStateFactory(this);
 		//para que se muestre el hud (aqui aun no semuestra)
 		correctasPlayer1= new ArrayList<Integer> ();
 		correctasPlayer2= new ArrayList<Integer> ();
 
+	}
+	public int getResume() {
+		return resume;
+	}
+	public void setResume(int resume) {
+		this.resume = resume;
 	}
 	public GameState getStart() {
 		return factory.getStart();

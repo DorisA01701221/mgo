@@ -2,7 +2,7 @@ package extras;
 
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
-
+// clase para controlar colisiones pero ya no lepude cambiar el nombre a la clase
 public class Animal {
 	private int x;
 	private int y;
