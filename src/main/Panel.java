@@ -22,7 +22,7 @@ import states.GameContext;
 
 public class Panel extends JPanel implements Runnable{
 	//private final static String IMS_FILE = "imsInfo.txt";
-	
+
 	private ImageLoader imsLoader;
 
 	private static final int PWIDTH = 866; 
@@ -68,7 +68,7 @@ public class Panel extends JPanel implements Runnable{
 	public void pauseGame(){
 		isPaused = true;
 	}
-	
+
 	public void resumeGame(){
 		isPaused = false;
 	}
@@ -124,23 +124,23 @@ public class Panel extends JPanel implements Runnable{
 	}
 	private void readyForTermination() {
 		addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                int x = e.getX();
-                int y = e.getY();
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int x = e.getX();
+				int y = e.getY();
 
-                context.setX(x);
-                context.setY(y);
-            }
-        });
+				context.setX(x);
+				context.setY(y);
+			}
+		});
 	}
 	public static void main(String args[]){
-		 JFrame app = new JFrame("Test");
-	     app.getContentPane().add(new Panel(), BorderLayout.CENTER);
-	     app.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		JFrame app = new JFrame("Test");
+		app.getContentPane().add(new Panel(), BorderLayout.CENTER);
+		app.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-	     app.pack();
-	     app.setResizable(false);  
-	     app.setVisible(true);
-		}
+		app.pack();
+		app.setResizable(false);  
+		app.setVisible(true);
+	}
 }

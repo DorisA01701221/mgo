@@ -17,17 +17,17 @@ public class ImageLoader {
 		initLoader();
 		loadImagesFile(fnm);
 	}
-	
+
 	private ImageLoader(){ 
 		initLoader();  
 	} 
-	
+
 	public static ImageLoader getImageLoader(String fnm) {
 		if (loader == null) {
 			loader= new ImageLoader();
 		} return loader;
 	}
-	
+
 	public static ImageLoader getImageLoader() {
 		if (loader == null) {
 			loader = new ImageLoader("imsInfo.txt");
@@ -93,7 +93,7 @@ public class ImageLoader {
 		}
 
 		BufferedImage bi = loadImage(fnm);
-		
+
 		if (bi != null) {
 			ArrayList imsList = new ArrayList();
 			imsList.add(bi);
@@ -104,7 +104,7 @@ public class ImageLoader {
 		else
 			return false; 
 	}
-	
+
 	private String getPrefix(String fnm) {
 		int posn;
 		if ((posn = fnm.lastIndexOf(".")) == -1) {

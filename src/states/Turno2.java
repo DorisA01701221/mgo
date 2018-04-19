@@ -18,6 +18,8 @@ public class Turno2 implements GameState{
 	private Animal gusano, tortuga, rino;
 	private int selectLetra;
 	private int correct;
+	private int vidas;
+
 	public Turno2(GameContext gc) {
 		this.gc=gc;
 		//accediendo a imageloader
@@ -25,6 +27,7 @@ public class Turno2 implements GameState{
 		gusano =  new Animal(img.getImage("gusano"),100, 60,121 , 121);
 		tortuga = new Animal(img.getImage("tortuga") ,373, 60,121 , 121 );
 		rino = new Animal(img.getImage("rino"),645, 60, 121 , 121);
+		vidas=3; //va a tener 3 vidas
 		//accediendo a la pregunta
 		ask = img.getImage("ask");
 		//poner hud
@@ -43,7 +46,9 @@ public class Turno2 implements GameState{
 
 	@Override
 	public void overrr() {
-
+		if(gc.getCorrectasPlayer1().size()== 3 || gc.getCorrectasPlayer2().size()==3) {
+			gc.setCurrent(gc.getOvered());
+		}
 	}
 
 	@Override
@@ -59,7 +64,7 @@ public class Turno2 implements GameState{
 
 	@Override
 	public void turno2() {
-		
+
 	}
 
 	@Override
@@ -82,31 +87,31 @@ public class Turno2 implements GameState{
 			g.drawImage(avatar5, 666, 245,200,200,null);
 		}
 
-		if(!gc.getCorrectasPlayer1().isEmpty()) {
-			Iterator<Integer> i = gc.getCorrectasPlayer1().iterator();
+		if(!gc.getCorrectasPlayer2().isEmpty()) {
+			Iterator<Integer> i = gc.getCorrectasPlayer2().iterator();
 			int x=706;//para que la imagen ue ponga en el hud se recorra
 			while(i.hasNext()) {
 				//recuperalo que tiene guardado en correctas 
 				int aux=i.next();
 				switch(aux) {
-				case 0: g.drawImage(gusano.getImgAnimal(),x,5,50,50, null);
+				case 3: g.drawImage(gusano.getImgAnimal(),x,5,50,50, null);
 				break;
-				case 1: g.drawImage(tortuga.getImgAnimal(),x,5,50,50, null);
+				case 4: g.drawImage(tortuga.getImgAnimal(),x,5,50,50, null);
 				break;
-				case 2: g.drawImage(rino.getImgAnimal(),x,5,50,50,null);
+				case 5: g.drawImage(rino.getImgAnimal(),x,5,50,50,null);
 				break;
 				}
-				
+
 				x-=60;//para que la imagen ue ponga en el hud se recorra
 			}
-			
+
 		}
 	}
 
 	@Override
 	public void update() {
 		//actualiza
-		//
+		overrr();
 		if(gc.getX() != -1 && gc.getY()!=-1) {
 			//si esta en cerdo
 			if(gusano.getRec().contains(gc.getX(), gc.getY())) {
@@ -120,6 +125,7 @@ public class Turno2 implements GameState{
 					turno1();
 				}else {
 					correct= 0;
+					vidas--; //quitar vidas
 				}
 			}
 			if(tortuga.getRec().contains(gc.getX(), gc.getY())) {
@@ -133,6 +139,7 @@ public class Turno2 implements GameState{
 					turno1();
 				}else {
 					correct= 0;
+					vidas--; //quitar vidas
 				}
 			}
 			if(rino.getRec().contains(gc.getX(), gc.getY())) {
@@ -146,11 +153,15 @@ public class Turno2 implements GameState{
 					turno1();
 				} else {
 					correct= 0;
+					vidas--; //quitar vidas
 				}
 			}
 			gc.setX(-1);
 			gc.setY(-1);
-			//reinicia context a que no se ha oprimido nada
+		}
+		if(vidas==0) {
+			vidas=3;
+			turno1();
 		}
 	}
 

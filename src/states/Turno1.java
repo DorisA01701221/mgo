@@ -18,6 +18,7 @@ public class Turno1 implements GameState{
 	private Animal cerdo, jirafa, vaca;
 	private int selectLetra;
 	private int correct;
+	private int vidas;
 	public Turno1(GameContext gc) {
 		this.gc=gc;
 		//accediendo a imageloader
@@ -25,6 +26,8 @@ public class Turno1 implements GameState{
 		cerdo =  new Animal(img.getImage("cerdo"),100, 60,121 , 121);
 		jirafa = new Animal(img.getImage("jirafa") ,373, 60,121 , 121 );
 		vaca = new Animal(img.getImage("vaca"),645, 60, 121 , 121);
+		//va a tener 3 vidas
+		vidas= 3;
 
 		ask = img.getImage("ask");
 		//poner hud
@@ -46,7 +49,10 @@ public class Turno1 implements GameState{
 
 	@Override
 	public void overrr() {
-
+	
+	if(gc.getCorrectasPlayer1().size()== 3 || gc.getCorrectasPlayer2().size()==3) {
+		gc.setCurrent(gc.getOvered());
+	}
 	}
 
 	@Override
@@ -110,8 +116,9 @@ public class Turno1 implements GameState{
 	@Override
 	public void update() {
 		//actualiza
-		//
+		overrr();
 		if(gc.getX() != -1 && gc.getY()!=-1) {
+			
 			//si esta en cerdo
 			if(cerdo.getRec().contains(gc.getX(), gc.getY())) {
 				if(selectLetra == 0) {
@@ -122,6 +129,8 @@ public class Turno1 implements GameState{
 					turno2();
 				}else {
 					correct= 0;
+					//quitar vidas
+					vidas--;
 				}
 			}
 			if(jirafa.getRec().contains(gc.getX(), gc.getY())) {
@@ -133,6 +142,7 @@ public class Turno1 implements GameState{
 					turno2();
 				}else {
 					correct= 0;
+					vidas--;//quitar vidas
 				}
 			}
 			if(vaca.getRec().contains(gc.getX(), gc.getY())) {
@@ -144,11 +154,16 @@ public class Turno1 implements GameState{
 					turno2();
 				} else {
 					correct= 0;
+					vidas--;//quitar vidas
 				}
 			}
 			//reinicia context a que no se ha oprimido nada
 			gc.setX(-1);
 			gc.setY(-1);
+		}
+		if(vidas==0) {
+			vidas=3;
+			turno2();
 		}
 	}
 
