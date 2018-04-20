@@ -7,6 +7,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import extras.Animal;
+import extras.Cronometro;
 import interfaz.GameState;
 import singletons.ImageLoader;
 
@@ -18,7 +19,9 @@ public class Turno1 implements GameState{
 	private Animal cerdo, jirafa, vaca,salir, pause;//botones y colisiones
 	private int selectLetra;
 	private int correct;
-	private int vidas;
+	private int vidas, minutosTotales,segundosTotales;
+	private Cronometro time;//objeto para el timer
+	
 	public Turno1(GameContext gc) {
 		this.gc=gc;
 		//accediendo a imageloader
@@ -29,6 +32,10 @@ public class Turno1 implements GameState{
 		//va a tener 3 vidas
 		vidas= 3;
 		pause= new Animal(img.getImage("pausaB"),412,385,41,41);
+		//timer
+		time= new Cronometro();
+		minutosTotales=0;
+		segundosTotales=0;
 
 		ask = img.getImage("ask");
 		//poner hud
@@ -87,14 +94,15 @@ public class Turno1 implements GameState{
 		//aqui aparece el hud
 		g.drawImage(hud,5,5,856,55,null);
 		//si acierta, avatar feliz 
+		
 		if(correct == 1) {
 			g.drawImage(avatar1, 0,245, 200, 200,null);
 		}
 		//si no aciertaavatar triste
-		if(correct ==0) {
+		if(correct == 0) {
 			g.drawImage(avatar4, 0, 245,200,200,null);
 		}
-
+		//para correctas de player1
 		if(!gc.getCorrectasPlayer1().isEmpty()) {
 			Iterator<Integer> i = gc.getCorrectasPlayer1().iterator();
 			int x=130;//para que la imagen ue ponga en el hud se recorra
@@ -112,23 +120,57 @@ public class Turno1 implements GameState{
 				
 				x+=60;//para que la imagen ue ponga en el hud se recorra
 			}
-			
+		}
+		
+		//ver las de tu contrincante#####
+		if(!gc.getCorrectasPlayer2().isEmpty()) {
+			Iterator<Integer> i = gc.getCorrectasPlayer2().iterator();
+			int x=706;//para que la imagen ue ponga en el hud se recorra
+			while(i.hasNext()) {
+				//recuperalo que tiene guardado en correctas 
+				int aux=i.next();
+				switch(aux) {
+				case 3: g.drawImage(img.getImage("gusano"),x,5,50,50, null);
+				break;
+				case 4: g.drawImage(img.getImage("tortuga"),x,5,50,50, null);
+				break;
+				case 5: g.drawImage(img.getImage("rino"),x,5,50,50,null);
+				break;
+				}
+
+				x-=60;//para que la imagen ue ponga en el hud se recorra
+			}
 		}
 	}
 
 	@Override
 	public void update() {
+		System.out.println(time.toString());
 		//actualiza
 		overrr();
+		//iniciar timer
+		
 		if(gc.getX() != -1 && gc.getY()!=-1) {
-			
 			//si esta en cerdo
 			if(cerdo.getRec().contains(gc.getX(), gc.getY())) {
 				if(selectLetra == 0) {
+					
+					vidas=3;
 					correct = 1;
 					//agregando  C si estan correctas y lo guarda en correctas
 					gc.getCorrectasPlayer1().add(0);
+					gc.setX(-1);
+					gc.setY(-1);
+					//se duerma unos segundos
+					try {
+						Thread.sleep(1000);
+					}catch(InterruptedException ex){
+						Logger.getLogger(Starting.class.getName()).log(Level.SEVERE, null, ex);
+					}
+					//la imagen aparezca y desaparezca
+					correct=-1;
 					selectLetra++;//pasar a la siguiente letra
+					//pasa turno
 					turno2();
 				}else {
 					correct= 0;
@@ -138,10 +180,22 @@ public class Turno1 implements GameState{
 			}
 			if(jirafa.getRec().contains(gc.getX(), gc.getY())) {
 				if(selectLetra == 1) {
+					
+					vidas=3;
 					correct = 1;
 					//agregando  J si estan correctas
 					gc.getCorrectasPlayer1().add(1);
+					gc.setX(-1);
+					gc.setY(-1);
+					//se duerme unos segundos
+					try {
+						Thread.sleep(1000);
+					}catch(InterruptedException ex){
+						Logger.getLogger(Starting.class.getName()).log(Level.SEVERE, null, ex);
+					}
+					correct=-1;
 					selectLetra++;//pasar a la siguiente letra
+					//pasa turno
 					turno2();
 				}else {
 					correct= 0;
@@ -150,10 +204,22 @@ public class Turno1 implements GameState{
 			}
 			if(vaca.getRec().contains(gc.getX(), gc.getY())) {
 				if(selectLetra == 2) {
+					
+					vidas=3;
 					correct = 1;
 					//agregando  V si estan correctas
 					gc.getCorrectasPlayer1().add(2);
+					gc.setX(-1);
+					gc.setY(-1);
+					//se duerme unos segundos
+					try {
+						Thread.sleep(1000);
+					}catch(InterruptedException ex){
+						Logger.getLogger(Starting.class.getName()).log(Level.SEVERE, null, ex);
+					}
+					correct=-1;
 					selectLetra=0;//pasar a la siguiente letra
+					//pasa turno
 					turno2();
 				} else {
 					correct= 0;
@@ -162,6 +228,7 @@ public class Turno1 implements GameState{
 			}
 			//detectar colisiones del boton pausa
 			if(pause.getRec().contains(gc.getX(),gc.getY())) {
+				
 				gc.setX(-1);
 				gc.setY(-1);
 				gc.setResume(1);
@@ -171,9 +238,24 @@ public class Turno1 implements GameState{
 			//reinicia context a que no se ha oprimido nada
 			gc.setX(-1);
 			gc.setY(-1);
+			//sleep para que nose confunda cada que es erroneo
+			try {
+				Thread.sleep(1000);
+			}catch(InterruptedException ex){
+				Logger.getLogger(Starting.class.getName()).log(Level.SEVERE, null, ex);
+			}
+			correct=-1;
 		}
-		if(vidas==0) {
+		if(vidas<1) {
+			
 			vidas=3;
+			//se duerme unos segundos
+			try {
+				Thread.sleep(1000);
+			}catch(InterruptedException ex){
+				Logger.getLogger(Starting.class.getName()).log(Level.SEVERE, null, ex);
+			}
+			//pasa turno
 			turno2();
 		}
 	}
