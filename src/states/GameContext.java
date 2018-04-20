@@ -12,9 +12,7 @@ public class GameContext {
 	private BufferedImage bg;
 	private StateFactory factory;
 	private int x;
-	private int y;
-	private ArrayList<Integer> correctasPlayer1;
-	private ArrayList<Integer> correctasPlayer2;	
+	private int y;	
 	private int resume;
 
 	public GameContext() {
@@ -26,9 +24,6 @@ public class GameContext {
 		
 		bg =imsLoader.getImage("background");
 		factory = StateFactory.getStateFactory(this);
-		//para que se muestre el hud (aqui aun no semuestra)
-		correctasPlayer1= new ArrayList<Integer> ();
-		correctasPlayer2= new ArrayList<Integer> ();
 	}
 	public int getResume() {
 		return resume;
@@ -72,17 +67,5 @@ public class GameContext {
 	}
 	public void setY(int y) {
 		this.y = y;
-	}
-	public ArrayList<Integer> getCorrectasPlayer1() {
-		return correctasPlayer1;
-	}
-	public void setCorrectasPlayer1(ArrayList<Integer> correctasPlayer1) {
-		this.correctasPlayer1 = correctasPlayer1;
-	}
-	public ArrayList<Integer> getCorrectasPlayer2() {
-		return correctasPlayer2;
-	}
-	public void setCorrectasPlayer2(ArrayList<Integer> correctasPlayer2) {
-		this.correctasPlayer2 = correctasPlayer2;
 	}
 }

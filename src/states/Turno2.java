@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 import extras.Animal;
 import extras.Cronometro;
 import interfaz.GameState;
+import singletons.Hud;
 import singletons.ImageLoader;
 
 public class Turno2 implements GameState{
@@ -21,6 +22,7 @@ public class Turno2 implements GameState{
 	private int vidas, minutosTotales,segundosTotales;
 	private Cronometro time;
 	private int lastMin, lastSec, lastCent;//variables aux
+	private Hud myHud;
 	
 	public Turno2(GameContext gc) {
 		this.gc=gc;
@@ -36,8 +38,8 @@ public class Turno2 implements GameState{
 				segundosTotales=0;
 
 		ask = img.getImage("ask");//accediendo a la pregunta
-		
-		hud= img.getImage("hud");//poner hud
+		//inicializo el hud
+				myHud= Hud.getHud();
 		//poner avatar feliz y triste del pony
 		avatar3 = img.getImage("avatar3");
 		avatar5 = img.getImage("avatar5");
@@ -58,7 +60,7 @@ public class Turno2 implements GameState{
 
 	@Override
 	public void overrr() {
-		if(gc.getCorrectasPlayer1().size()== 3 || gc.getCorrectasPlayer2().size()==3) {
+		if(myHud.getCorrectasPlayer1().size()== 3 || myHud.getCorrectasPlayer2().size()==3) {
 			gc.setCurrent(gc.getOvered());
 		}
 	}
@@ -80,6 +82,8 @@ public class Turno2 implements GameState{
 
 	@Override
 	public void render(Graphics g) {
+		myHud.render(g);
+		
 		//dibuja la imagen si hay algo que no se dibujó no se renderisa
 		g.drawImage(gusano.getImgAnimal(), gusano.getX(),gusano.getY(), gusano.getWidth(), gusano.getHeight(), null);
 		g.drawImage(tortuga.getImgAnimal(),tortuga.getX(),tortuga.getY(), tortuga.getWidth(), tortuga.getHeight(), null);
@@ -99,51 +103,12 @@ public class Turno2 implements GameState{
 		if(correct ==0) {
 			g.drawImage(avatar5, 666, 245,200,200,null);
 		}
-
-		if(!gc.getCorrectasPlayer2().isEmpty()) {
-			Iterator<Integer> i = gc.getCorrectasPlayer2().iterator();
-			int x=706;//para que la imagen ue ponga en el hud se recorra
-			while(i.hasNext()) {
-				//recuperalo que tiene guardado en correctas 
-				int aux=i.next();
-				switch(aux) {
-				case 3: g.drawImage(gusano.getImgAnimal(),x,5,50,50, null);
-				break;
-				case 4: g.drawImage(tortuga.getImgAnimal(),x,5,50,50, null);
-				break;
-				case 5: g.drawImage(rino.getImgAnimal(),x,5,50,50,null);
-				break;
-				}
-
-				x-=60;//para que la imagen ue ponga en el hud se recorra
-			}
-		}
-		
-		//ver correctas de oponente
-		if(!gc.getCorrectasPlayer1().isEmpty()) {
-			Iterator<Integer> i = gc.getCorrectasPlayer1().iterator();
-			int x=130;//para que la imagen ue ponga en el hud se recorra
-			while(i.hasNext()) {
-				//recuperalo que tiene guardado en correctas 
-				int aux=i.next();
-				switch(aux) {
-				case 0: g.drawImage(img.getImage("cerdo"),x,5,50,50, null);
-				break;
-				case 1: g.drawImage(img.getImage("jirafa"),x,5,50,50, null);
-				break;
-				case 2: g.drawImage(img.getImage("vaca"),x,5,50,50,null);
-				break;
-				}
-				
-				x+=60;//para que la imagen ue ponga en el hud se recorra
-			}
-		}
-		
 	}
 
 	@Override
 	public void update() {
-		System.out.println(time.toString());
+		//hace el update del reloj
+		myHud.update();
 		//checar si las banderas estan en -1
 		if(lastSec != -1 && lastMin != -1 && lastCent != -1) {
 			//si no son -1 asignamos el valor al thread(con set)
@@ -161,6 +126,8 @@ public class Turno2 implements GameState{
 			//si esta en gusano
 			if(gusano.getRec().contains(gc.getX(), gc.getY())) {
 				if(selectLetra == 0) {
+					//recupera el string del tiempo
+					myHud.getTimepoPlayer2().add(time.toString());
 					//cuando dan click a letra, verifica el momento (en tiempo)
 					lastSec = 0;
 					lastMin = 0;
@@ -169,7 +136,7 @@ public class Turno2 implements GameState{
 					vidas=3;
 					correct = 1;
 					//agregando  g si estan correctas y lo guarda en correctas
-					gc.getCorrectasPlayer2().add(3);
+					myHud.getCorrectasPlayer2().add(3);
 					gc.setX(-1);
 					gc.setY(-1);
 					//se duerme unos segundos
@@ -190,6 +157,8 @@ public class Turno2 implements GameState{
 			}
 			if(tortuga.getRec().contains(gc.getX(), gc.getY())) {
 				if(selectLetra == 1) {
+					//recupera el string del tiempo
+					myHud.getTimepoPlayer2().add(time.toString());
 					lastSec = 0;
 					lastMin = 0;
 					lastCent = 0;
@@ -197,7 +166,7 @@ public class Turno2 implements GameState{
 					vidas=3;
 					correct = 1;
 					//agregando t si estan correctas
-					gc.getCorrectasPlayer2().add(4);
+					myHud.getCorrectasPlayer2().add(4);
 					gc.setX(-1);
 					gc.setY(-1);
 					//se duerme unos segundos
@@ -218,13 +187,15 @@ public class Turno2 implements GameState{
 			}
 			if(rino.getRec().contains(gc.getX(), gc.getY())) {
 				if(selectLetra == 2) {
+					//recupera el string del tiempo
+					myHud.getTimepoPlayer2().add(time.toString());
 					lastSec = 0;
 					lastMin = 0;
 					lastCent = 0;
 					vidas=3;
 					correct = 1;
 					//agregando si estan correctas
-					gc.getCorrectasPlayer2().add(5);
+					myHud.getCorrectasPlayer2().add(5);
 					gc.setX(-1);
 					gc.setY(-1);
 					//se duerme unos segundos
