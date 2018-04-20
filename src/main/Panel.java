@@ -6,24 +6,19 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Toolkit;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import singletons.ImageLoader;
 import states.GameContext;
 
 public class Panel extends JPanel implements Runnable{
 	//private final static String IMS_FILE = "imsInfo.txt";
 
-	private ImageLoader imsLoader;
 
 	private static final int PWIDTH = 866; 
 	private static final int PHEIGHT = 445;
@@ -38,7 +33,6 @@ public class Panel extends JPanel implements Runnable{
 
 
 	public Panel() {
-		imsLoader = ImageLoader.getImageLoader();
 		setBackground(Color.white);
 		setPreferredSize(new Dimension(PWIDTH,PHEIGHT));
 		setFocusable(true);

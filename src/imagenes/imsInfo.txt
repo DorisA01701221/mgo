@@ -27,6 +27,10 @@ o pausaB.png
 O playB.png
 
 o r.png
+o relog1.png
+o relog2.png
+o relog3.png
+o relog4.png
 o rino.png
 
 o t.png

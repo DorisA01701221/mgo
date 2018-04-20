@@ -1,89 +1,75 @@
 package extras;
 
-import javax.swing.*;
-import java.awt.event.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-public class Cronometro implements Runnable{
-	private Timer t;
-	private int minutes;
-	private int seconds;
-	private int cs;
-	private ActionListener actions;
+public class Cronometro implements Runnable {
+	private Thread time;
+	private int min;
+	private int sec;
+	private int cent;
+	private boolean running;
 	
 	public Cronometro() {
-		minutes = 0;
-		seconds = 0;
-		cs = 0;
+		time = new Thread(this);
 		
-		t = new Timer(10, actions);
+		min=0;
+		sec=0;
+		cent=0;
 		
-		actions = new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				cs++;
-				
-				if(cs == 100) {
-					cs = 0;
-					seconds++;
-				} 
-				
-				if(seconds == 60) {
-					seconds = 0;
-					minutes++;
-				}
-			}
-		};
-		
-		t.start();
+		running=true;
+		time.start();
 	}
 	
-	public void startCronometro() {
-		t.start();
-	}
-	
-	public void pauseCronometro( ) {
-		t.stop();
-	}
-	
-	public void reloadCronometro() {
-		if(t.isRunning()) {
-			pauseCronometro();
-			startCronometro();
-		}
-		
-		minutes = 0;
-		seconds = 0;
-		cs = 0;
-	}
-
-	public int getMinutes() {
-		return minutes;
-	}
-
-	public void setMinutes(int minutes) {
-		this.minutes = minutes;
-	}
-
-	public int getSeconds() {
-		return seconds;
-	}
-
-	public void setSeconds(int seconds) {
-		this.seconds = seconds;
-	}
-
-	public int getCs() {
-		return cs;
-	}
-
-	public void setCs(int cs) {
-		this.cs = cs;
-	}
-	
+		@Override
 	public String toString() {
-		return Integer.toString(minutes) + ":" + Integer.toString(seconds) + ":" + Integer.toString(cs);
+		return min + ":" + sec + ":" + cent;
 	}
 	
-	
+	@Override
+	public void run() {
+		while(this.running) {
+			try {
+				Thread.sleep(10);
+			}catch(InterruptedException ex){
+				Logger.getLogger(Cronometro.class.getName()).log(Level.SEVERE, null, ex);
+			}
+			
+			cent++;
+			
+			if(cent == 100) {
+				cent=0;
+				sec++;
+			}
+			
+			if(sec == 60) {
+				sec=0;
+				min++;
+			}
+		}
+	}
+
+	public int getMin() {
+		return min;
+	}
+
+	public void setMin(int min) {
+		this.min = min;
+	}
+
+	public int getSec() {
+		return sec;
+	}
+
+	public void setSec(int sec) {
+		this.sec = sec;
+	}
+
+	public int getCent() {
+		return cent;
+	}
+
+	public void setCent(int cent) {
+		this.cent = cent;
+	}
 }

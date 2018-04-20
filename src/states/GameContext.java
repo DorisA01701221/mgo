@@ -3,7 +3,6 @@ package states;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-
 import interfaz.GameState;
 import singletons.ImageLoader;
 import singletons.StateFactory;
@@ -30,7 +29,6 @@ public class GameContext {
 		//para que se muestre el hud (aqui aun no semuestra)
 		correctasPlayer1= new ArrayList<Integer> ();
 		correctasPlayer2= new ArrayList<Integer> ();
-
 	}
 	public int getResume() {
 		return resume;

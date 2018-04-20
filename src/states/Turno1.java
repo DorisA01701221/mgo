@@ -5,7 +5,6 @@ import java.awt.image.BufferedImage;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import extras.Animal;
 import extras.Cronometro;
 import interfaz.GameState;
@@ -16,11 +15,12 @@ public class Turno1 implements GameState{
 	private ImageLoader img;
 	private BufferedImage  ask, avatar1, avatar4, hud;
 	private BufferedImage[] letras;
-	private Animal cerdo, jirafa, vaca,salir, pause;//botones y colisiones
+	private Animal cerdo, jirafa, vaca, pause;//botones y colisiones
 	private int selectLetra;
 	private int correct;
 	private int vidas, minutosTotales,segundosTotales;
-	private Cronometro time;//objeto para el timer
+	private Cronometro time;
+	private int lastMin, lastSec, lastCent;//variables aux
 	
 	public Turno1(GameContext gc) {
 		this.gc=gc;
@@ -33,7 +33,6 @@ public class Turno1 implements GameState{
 		vidas= 3;
 		pause= new Animal(img.getImage("pausaB"),412,385,41,41);
 		//timer
-		time= new Cronometro();
 		minutosTotales=0;
 		segundosTotales=0;
 
@@ -53,6 +52,12 @@ public class Turno1 implements GameState{
 
 		//variable para saber si laimagen esta correcta
 		correct=-1;
+		//crear time como nuevo
+		time = new Cronometro();
+		//inicialice como una bandera
+		lastMin = -1;
+		lastSec = -1;
+		lastCent = -1;
 	}
 
 	@Override
@@ -146,7 +151,18 @@ public class Turno1 implements GameState{
 	@Override
 	public void update() {
 		System.out.println(time.toString());
-		//actualiza
+		//checar si las banderas estan en -1
+		if(lastSec != -1 && lastMin != -1 && lastCent != -1) {
+			//si no son -1 asignamos el valor al thread(con set)
+			time.setMin(lastMin);
+			time.setSec(lastSec);
+			time.setCent(lastSec);
+			//inicializo de nuevo
+			lastMin = -1;
+			lastSec = -1;
+			lastCent = -1;
+		}
+		
 		overrr();
 		//iniciar timer
 		
@@ -154,11 +170,16 @@ public class Turno1 implements GameState{
 			//si esta en cerdo
 			if(cerdo.getRec().contains(gc.getX(), gc.getY())) {
 				if(selectLetra == 0) {
+					//cuando dan click a letra, verifica el momento (en tiempo)
+					lastSec = 0;
+					lastMin = 0;
+					lastCent = 0;
 					
 					vidas=3;
 					correct = 1;
 					//agregando  C si estan correctas y lo guarda en correctas
 					gc.getCorrectasPlayer1().add(0);
+					
 					gc.setX(-1);
 					gc.setY(-1);
 					//se duerma unos segundos
@@ -180,11 +201,15 @@ public class Turno1 implements GameState{
 			}
 			if(jirafa.getRec().contains(gc.getX(), gc.getY())) {
 				if(selectLetra == 1) {
+					lastSec = 0;
+					lastMin = 0;
+					lastCent = 0;
 					
 					vidas=3;
 					correct = 1;
 					//agregando  J si estan correctas
 					gc.getCorrectasPlayer1().add(1);
+					
 					gc.setX(-1);
 					gc.setY(-1);
 					//se duerme unos segundos
@@ -204,6 +229,9 @@ public class Turno1 implements GameState{
 			}
 			if(vaca.getRec().contains(gc.getX(), gc.getY())) {
 				if(selectLetra == 2) {
+					lastSec = 0;
+					lastMin = 0;
+					lastCent = 0;
 					
 					vidas=3;
 					correct = 1;
@@ -228,6 +256,10 @@ public class Turno1 implements GameState{
 			}
 			//detectar colisiones del boton pausa
 			if(pause.getRec().contains(gc.getX(),gc.getY())) {
+				//recupera en pausa
+				lastSec = time.getSec();
+				lastMin = time.getMin();
+				lastCent = time.getCent();
 				
 				gc.setX(-1);
 				gc.setY(-1);
@@ -247,7 +279,10 @@ public class Turno1 implements GameState{
 			correct=-1;
 		}
 		if(vidas<1) {
-			
+			//recuperas el tiempo
+			lastSec = time.getSec();
+			lastMin = time.getMin();
+			lastCent = time.getCent();
 			vidas=3;
 			//se duerme unos segundos
 			try {
