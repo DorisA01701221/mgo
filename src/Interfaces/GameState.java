@@ -1,12 +1,12 @@
-package interfaz;
-
+package Interfaces;
 import java.awt.Graphics;
 
 public interface GameState {
-	public void overrr();
+	public void starting();
+	public void turn1();
+	public void turn2();
 	public void pause();
-	public void turno1();
-	public void turno2();
+	public void over();
 	
 	public void render(Graphics g);
 	public void update();

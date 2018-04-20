@@ -1,132 +1,94 @@
 package singletons;
-
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import states.Starting;
+import java.awt.*;
+import java.util.*;
+import java.util.logging.*;
 
 public class Hud {
-	private static Hud isHud;//para el hud
-	private ImageLoader loader;
-	private ArrayList<Integer> correctasPlayer1;//para saber que imagen iba a dibujar de correctas en elhud
-	private ArrayList<Integer> correctasPlayer2;
-	private int relog;//este ira cambiandomis imagenes
-	private ArrayList<String> tiempoPlayer1;//saber el tiempo en elegir imagen
-	private ArrayList<String> tiempoPlayer2;//saber el tiempo en elegir imagen
-
+	private static Hud hud;
+	private ImageLoader img;
+	private ArrayList<Integer> rightPlayer1;
+	private ArrayList<Integer> rightPlayer2;
+	private ArrayList<String> timesPlayer1;
+	private ArrayList<String> timesPlayer2;
+	private int clock; //la imagen//este ira cambiandomis imagenes
+	//constructor
 	private Hud() {
-		loader= ImageLoader.getImageLoader();
-		//para que se muestre el hud (aqui aun no semuestra)
-		correctasPlayer1= new ArrayList<Integer> ();
-		correctasPlayer2= new ArrayList<Integer> ();
-		relog=1;
-		tiempoPlayer1= new ArrayList<String> ();
-		tiempoPlayer2= new ArrayList<String> ();
+		img = ImageLoader.getLoader();
+		rightPlayer1 = new ArrayList<Integer> ();
+		rightPlayer2 = new ArrayList<Integer> ();
+		timesPlayer1 = new ArrayList<String> ();
+		timesPlayer2 = new ArrayList<String> ();
+		clock = 1;
 	}
 	public static Hud getHud() {
-		if (isHud == null) {
-			isHud= new Hud();
-		} return isHud;
+		if(hud == null) {
+			hud = new Hud();
+		}
+		return hud;
 	}
-	public ArrayList<Integer> getCorrectasPlayer1() {
-		return correctasPlayer1;
-	}
-	public void setCorrectasPlayer1(ArrayList<Integer> correctasPlayer1) {
-		this.correctasPlayer1 = correctasPlayer1;
-	}
-	public ArrayList<Integer> getCorrectasPlayer2() {
-		return correctasPlayer2;
-	}
-	public void setCorrectasPlayer2(ArrayList<Integer> correctasPlayer2) {
-		this.correctasPlayer2 = correctasPlayer2;
-	}
-	
-	public ArrayList<String> getTimepoPlayer1() {
-		return tiempoPlayer1;
-	}
-	public void setTimepoPlayer1(ArrayList<String> timepoPlayer1) {
-		this.tiempoPlayer1 = timepoPlayer1;
-	}
-	public ArrayList<String> getTimepoPlayer2() {
-		return tiempoPlayer2;
-	}
-	public void setTimepoPlayer2(ArrayList<String> timepoPlayer2) {
-		this.tiempoPlayer2 = timepoPlayer2;
-	}
-	//render
+	//getters: uso el mismo que ya existe
+	public ArrayList<Integer> getRightPlayer1() { return rightPlayer1; }
+	public ArrayList<Integer> getRightPlayer2() { return rightPlayer2; }
+	public ArrayList<String> getTimesPlayer1() { return timesPlayer1; }
+	public ArrayList<String> getTimesPlayer2() { return timesPlayer2; }
 	public void render(Graphics g) {
-		//aqui aparece el hud
-		g.drawImage(loader.getImage("hud"),5,5,856,55,null);
-		//pone la imagen de reloj
-		g.drawImage(loader.getImage("relog"+Integer.toString(relog)),406,5,55,55,null);
-
-		//para correctas de player1
-		if(!correctasPlayer1.isEmpty()) {
-			Iterator<Integer> i = correctasPlayer1.iterator();
-			int x=130;//para que la imagen ue ponga en el hud se recorra
-			while(i.hasNext()) {
-				//recuperalo que tiene guardado en correctas 
-				int aux=i.next();
-				switch(aux) {
-				case 0: g.drawImage(loader.getImage("cerdo"),x,5,50,50, null);
+		//color y fuente del tiempo que se imprime encada correcta
+		g.setColor(Color.BLACK);
+		g.setFont(new Font ("Tahoma", Font.BOLD,15));
+		//se dibuja el hud y el reloj que ira cambiando las 4 imagenes
+		g.drawImage(img.getImage("hud"),5,5,856,55,null);
+		g.drawImage(img.getImage("relog"+Integer.toString(clock)),406,5,55,55,null);
+		//para correctas de player 1
+		if(!rightPlayer1.isEmpty()) {
+			Iterator<Integer> itr = rightPlayer1.iterator();
+			int x = 130;//para que la imagen ue ponga en el hud se recorra
+			while(itr.hasNext()) {
+				int aux = itr.next();
+				//recuperalo que tiene guardado en correctas
+				switch (aux) {
+				case 0: g.drawImage(img.getImage("cerdo"),x,5,50,50, null);
 				break;
-				case 1: g.drawImage(loader.getImage("jirafa"),x,5,50,50, null);
+				case 1: g.drawImage(img.getImage("jirafa"),x,5,50,50, null);
 				break;
-				case 2: g.drawImage(loader.getImage("vaca"),x,5,50,50,null);
+				case 2: g.drawImage(img.getImage("vaca"),x,5,50,50,null);
 				break;
 				}
-
-				x+=110;//para que la imagen ue ponga en el hud se recorra
+				x += 110;//para que la imagen ue ponga en el hud se recorra
 			}
 		}
-		if(!tiempoPlayer1.isEmpty()) {
-			Iterator<String> s= tiempoPlayer1.iterator();
+		if(!timesPlayer1.isEmpty()) {
+			Iterator<String> itr = timesPlayer1.iterator();
 			int x = 80;
-			while(s.hasNext()) {
-				String aux= s.next();
-				
-				g.setColor(Color.BLACK);
-				g.setFont(new Font ("Tahoma", Font.BOLD,15));
+			while(itr.hasNext()) {
+				String aux = itr.next();
 				g.drawString(aux, x, 50);
-				
-				x += 110;
+				x += 110;//  se recorre de posicion el tiempo
 			}
 		}
 		//ver las de tu contrincante#####
-		if(!correctasPlayer2.isEmpty()) {
-			Iterator<Integer> i = correctasPlayer2.iterator();
-			int x=690;//para que la imagen ue ponga en el hud se recorra
-			while(i.hasNext()) {
-				//recuperalo que tiene guardado en correctas 
-				int aux=i.next();
-				switch(aux) {
-				case 3: g.drawImage(loader.getImage("gusano"),x,5,50,50, null);
+		if(!rightPlayer2.isEmpty()) {
+			Iterator<Integer> itr = rightPlayer2.iterator();
+			int x = 690;//para que la imagen ue ponga en el hud se recorra
+			while(itr.hasNext()) {
+				//recuperalo que tiene guardado en correctas
+				int aux = itr.next();
+				switch (aux) {
+				case 3: g.drawImage(img.getImage("gusano"),x,5,50,50, null);
 				break;
-				case 4: g.drawImage(loader.getImage("tortuga"),x,5,50,50, null);
+				case 4: g.drawImage(img.getImage("tortuga"),x,5,50,50, null);
 				break;
-				case 5: g.drawImage(loader.getImage("rino"),x,5,50,50,null);
+				case 5: g.drawImage(img.getImage("rino"),x,5,50,50,null);
 				break;
 				}
-
-				x-=110;//para que la imagen ue ponga en el hud se recorra
+				x -= 110;//para que la imagen ue ponga en el hud se recorra
 			}
 		}
-		
-		if(!tiempoPlayer2.isEmpty()) {
-			Iterator<String> s= tiempoPlayer2.iterator();
+		if(!timesPlayer2.isEmpty()) {
+			Iterator<String> itr = timesPlayer2.iterator();
 			int x = 740;
-			while(s.hasNext()) {
-				String aux= s.next();
-				
-				g.setColor(Color.BLACK);
-				g.setFont(new Font ("Tahoma", Font.BOLD,15));
+			while(itr.hasNext()) {
+				String aux = itr.next();
 				g.drawString(aux, x, 50);
-				
 				x -= 110;
 			}
 		}
@@ -134,13 +96,13 @@ public class Hud {
 	public void update() {
 		try {
 			Thread.sleep(500);
-		}catch(InterruptedException ex){
-			Logger.getLogger(Starting.class.getName()).log(Level.SEVERE, null, ex);
+		} catch (InterruptedException e) {
+			Logger.getLogger(Hud.class.getName()).log(Level.SEVERE, null, e);
 		}
-		if(relog<4) {
-			relog++;
-		}else {
-			relog=1;
+		if(clock < 4) {
+			clock++;
+		} else {
+			clock = 1;
 		}
 	}
 }

@@ -1,64 +1,38 @@
 package singletons;
-
-import interfaz.GameState;
-import states.GameContext;
-import states.Overrr;
-import states.Pause;
-import states.Starting;
-import states.Turno1;
-import states.Turno2;
+import Interfaces.*;
+import states.*;
 
 public class StateFactory {
+	private static StateFactory states;
 	private Starting start;
-	private Turno1 turno1;
-	private Turno2 turno2;
+	private Turn1 turn1;
+	private Turn2 turn2;
 	private Pause paused;
-	private Overrr overed;
+	private Over overed;
 	private GameState current;
-	
-	private static StateFactory factory;
-	
+	//constructor
 	private StateFactory(GameContext gc) {
 		start = new Starting (gc);
-		turno1= new Turno1(gc);
-		turno2= new Turno2(gc);
+		turn1= new Turn1(gc);
+		turn2= new Turn2(gc);
 		paused= new Pause(gc);
-		overed= new Overrr(gc);
+		overed= new Over(gc);
 		current = start;
 	}
-	public static StateFactory getStateFactory(GameContext gc) {
-		if (factory == null) {
-			factory= new StateFactory(gc);
-		} return factory;
+	public static StateFactory getStates(GameContext gc) {
+		//si estados no existe lo crea
+		if(states == null) {
+			states = new StateFactory(gc);
+		}
+		//devuelve estado de factory
+		return states;
 	}
-	public static StateFactory getStateFactory() {
-		return factory;
-	}
-	public Starting getStart() {
-		return start;
-	}
-
-	public Turno1 getTurno1() {
-		return turno1;
-	}
-
-	public Turno2 getTurno2() {
-		return turno2;
-	}
-
-	public Pause getPaused() {
-		return paused;
-	}
-
-	public Overrr getOvered() {
-		return overed;
-	}
-
-	public void setCurrent(GameState gs) {
-		this.current=gs;
-	}
-	public GameState getCurrent() {
-		return current;
-	}
-	
+	//solo getters
+	public Starting getStart() { return start; }
+	public Turn1 getTurn1() { return turn1; }
+	public Turn2 getTurn2() { return turn2; }
+	public Pause getPaused() { return paused; }
+	public Over getOvered() { return overed; }
+	public GameState getCurrent() { return current;	}
+	public void setCurrent(GameState current) { this.current = current; }
 }

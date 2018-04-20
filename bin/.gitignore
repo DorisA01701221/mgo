@@ -1,5 +1,7 @@
-/singletons/
-/imagenes/
-/main/
-/states/
+/.DS_Store
+/Interfaces/
 /extras/
+/img/
+/main/
+/singletons/
+/states/

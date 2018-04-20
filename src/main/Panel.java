@@ -1,37 +1,23 @@
 package main;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.concurrent.*;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.Toolkit;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.*;
 
 import states.GameContext;
 
 public class Panel extends JPanel implements Runnable{
-	//private final static String IMS_FILE = "imsInfo.txt";
-
-
-	private static final int PWIDTH = 866; 
+	private static final int PWIDTH = 866;//tamaño de pantalla
 	private static final int PHEIGHT = 445;
-
-	private Thread animator;
-	private volatile boolean running = false;
+	private Thread animator;//animacion
+	private volatile boolean running = false;//todos los estados inician apagados
 	private volatile boolean gameOver = false;
 	private volatile boolean isPaused = false;
 	private GameContext context;
 	private Graphics dbg;
 	private Image dbImage = null;
-
-
+	//constructor
 	public Panel() {
 		setBackground(Color.white);
 		setPreferredSize(new Dimension(PWIDTH,PHEIGHT));
@@ -56,16 +42,9 @@ public class Panel extends JPanel implements Runnable{
 		application.shutdown();
 
 	}
-	public void stopGame(){
-		running = false;
-	}
-	public void pauseGame(){
-		isPaused = true;
-	}
-
-	public void resumeGame(){
-		isPaused = false;
-	}
+	public void stopGame(){ running = false; }
+	public void pauseGame(){ isPaused = true; }
+	public void resumeGame(){ isPaused = false; }
 	@Override
 	public void run() {
 		running = true;
@@ -73,7 +52,6 @@ public class Panel extends JPanel implements Runnable{
 			gameUpdate();
 			gameRender();
 			paintScreen();
-
 			try{
 				Thread.sleep(50);
 			}catch(InterruptedException ex){}
@@ -81,11 +59,9 @@ public class Panel extends JPanel implements Runnable{
 		System.exit(0);
 	}
 	private void gameUpdate(){
-
 		if(!isPaused && !gameOver){
 			context.update();
 		}
-
 	}
 	private void gameRender(){
 		if(dbImage == null){
@@ -96,9 +72,7 @@ public class Panel extends JPanel implements Runnable{
 			}else{
 				dbg = dbImage.getGraphics();
 			}
-
-
-		}	
+		}
 		dbg.setColor(Color.BLACK);
 		dbg.fillRect(0,0,PWIDTH,PHEIGHT);
 		context.render(dbg);
@@ -122,7 +96,6 @@ public class Panel extends JPanel implements Runnable{
 			public void mouseClicked(MouseEvent e) {
 				int x = e.getX();
 				int y = e.getY();
-
 				context.setX(x);
 				context.setY(y);
 			}
@@ -132,9 +105,8 @@ public class Panel extends JPanel implements Runnable{
 		JFrame app = new JFrame("Test");
 		app.getContentPane().add(new Panel(), BorderLayout.CENTER);
 		app.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
 		app.pack();
-		app.setResizable(false);  
+		app.setResizable(false);
 		app.setVisible(true);
 	}
 }

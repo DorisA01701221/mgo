@@ -1,74 +1,56 @@
 package states;
-import java.awt.Graphics;
+import java.awt.*;
 
-import extras.Animal;
-import interfaz.GameState;
-import singletons.ImageLoader;
-public class Pause implements GameState{
+import Interfaces.*;
+import extras.*;
+import singletons.*;
+
+public class Pause implements GameState {
 	private GameContext gc;
 	private ImageLoader img;
-	private Animal volver, salir;
-	
+	private Collider back, exitGame;
+	//constructor
 	public Pause(GameContext gc) {
-		this.gc=gc;
-		img=ImageLoader.getImageLoader();
-		volver=new Animal(img.getImage("volverB"),312,100,242,80);
-		salir=new Animal(img.getImage("salirB"),312,230,242,120);
+		this.gc = gc;
+		img=ImageLoader.getLoader();
+		back = new Collider(312, 100, 242, 80);
+		exitGame = new Collider(312, 230, 242, 120);
 	}
-
 	@Override
-	public void overrr() {
-		
-	}
-
+	public void starting() { }
 	@Override
-	public void pause() {
-		
-	}
-
+	public void turn1() { gc.setCurrent(gc.getTurn1()); }
 	@Override
-	public void turno1() {
-		gc.setCurrent(gc.getTurno1());
-	}
-
+	public void turn2() { gc.setCurrent(gc.getTurn2()); }
 	@Override
-	public void turno2() {
-		gc.setCurrent(gc.getTurno2());
-	}
-
+	public void pause() { }
+	@Override
+	public void over() { }
 	@Override
 	public void render(Graphics g) {
-		g.drawImage(img.getImage("pausa"), 0,0, 866,445,null);
-		g.drawImage(img.getImage("volverB"),312,100, 242, 80,null);
-		g.drawImage(img.getImage("salirB"),312,230,242, 120,null);
+		g.drawImage(img.getImage("pausa"), 0,0, 866,445,null);//imagen de pantalla de pausa
+		g.drawImage(img.getImage("volverB"),312,100, 242, 80,null);//imagen de boton de volver
+		g.drawImage(img.getImage("salirB"),312,230,242, 120,null);//imagen de boton de salir
 	}
-
 	@Override
 	public void update() {
-		//detecta si hizo click
-		if(gc.getX() != -1 && gc.getY() != -1) {
-			if(volver.getRec().contains(gc.getX(), gc.getY())) {
-				//reiniciando variables delos clicks
-				gc.setX(-1);
-				gc.setY(-1);
-				//regresa depende del turno al que le toca
-				if(gc.getResume()==1) {
-					turno1();
-				}else {
-					turno2();
+		if(gc.getX() != -1) {//detecta si hizo click
+			if(back.getCollider().contains(gc.getX(), gc.getY())) {
+				gc.setX(-1);//reiniciando variables delos clicks
+				gc.setY(-1);//reiniciando variables delos clicks
+				if(gc.getResume() == 1) {//regresa depende del turno al que le toca
+					turn1();
+				} else {
+					turn2();
 				}
 			}
-			if(salir.getRec().contains(gc.getX(), gc.getY())) {
-				//reiniciando variables delos clicks
-				gc.setX(-1);
-				gc.setY(-1);
-				System.exit(0);
+			if(exitGame.getCollider().contains(gc.getX(), gc.getY())) {
+				gc.setX(-1);//reiniciando variables delos clicks
+				gc.setY(-1);//reiniciando variables delos clicks
+				System.exit(0);//sale del juego
 			}
-			//reiniciando variables de los clicks
-			gc.setX(-1);
-			gc.setY(-1);
+			gc.setX(-1);//reiniciando variables delos clicks
+			gc.setY(-1);//reiniciando variables delos clicks
 		}
 	}
-
-	
 }

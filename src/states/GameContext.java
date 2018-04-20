@@ -1,71 +1,46 @@
 package states;
+import java.awt.*;
 
-import java.awt.Graphics;
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import interfaz.GameState;
-import singletons.ImageLoader;
-import singletons.StateFactory;
+import Interfaces.*;
+import singletons.*;
 
 public class GameContext {
-	private ImageLoader imsLoader= ImageLoader.getImageLoader();
-	private BufferedImage bg;
-	private StateFactory factory;
+	private ImageLoader img;
+	private StateFactory states;
+	private Chronometer chronometer;
 	private int x;
-	private int y;	
+	private int y;
+	private int winner;//saber que jugador gano
 	private int resume;
-
+	//constructor
 	public GameContext() {
-		//es de que no he reconocido un click
-		x=-1;
-		y=-1;
-		
-		resume=-1;
-		
-		bg =imsLoader.getImage("background");
-		factory = StateFactory.getStateFactory(this);
+		img = ImageLoader.getLoader();//recupera el loader
+		states = StateFactory.getStates(this);//obtiene el estado
+		chronometer = Chronometer.getChronometer();//recupero el cronometro
+		winner = -1;//inicio en -1 porque no se sabe aun quien haganado
+		resume = -1;//saber a que turno regresar
 	}
-	public int getResume() {
-		return resume;
+	//getters & setters
+	public int getX(){ return x; }
+	public void setX(int x){ this.x = x; }
+	public int getY(){ return y; }
+	public void setY(int y){ this.y = y; }
+	public int getWinner(){ return winner; }
+	public void setWinner(int winner){ this.winner = winner; }
+	public int getResume(){ return resume; }
+	public void setResume(int resume){ this.resume = resume; }
+	public Chronometer getChronometer(){ return chronometer; }
+	public void setCurrent(GameState gs){ states.setCurrent(gs); }
+	public GameState getStart(){ return states.getStart(); }
+	public GameState getTurn1(){ return states.getTurn1(); }
+	public GameState getTurn2(){ return states.getTurn2(); }
+	public GameState getPause(){ return states.getPaused(); }
+	public GameState getOver(){ return states.getOvered(); }
+	public void render(Graphics g) {//depende del estado
+		g.drawImage(img.getImage("background"), 0, 0, null);
+		states.getCurrent().render(g);
 	}
-	public void setResume(int resume) {
-		this.resume = resume;
-	}
-	public GameState getStart() {
-		return factory.getStart();
-	}
-	public GameState getTurno1() {
-		return factory.getTurno1();
-	}
-	public GameState getTurno2() {
-		return factory.getTurno2();
-	}
-	public GameState getPaused() {
-		return factory.getPaused();
-	}
-	public GameState getOvered() {
-		return factory.getOvered();
-	}
-	public void setCurrent(GameState gs) {
-		factory.setCurrent(gs);
-	}
-	public void update() {
-		factory.getCurrent().update();
-	}
-	public void render(Graphics g){
-		g.drawImage(bg, 0, 0,null);
-		factory.getCurrent().render(g);
-	}
-	public int getX() {
-		return x;
-	}
-	public void setX(int x) {
-		this.x = x;
-	}
-	public int getY() {
-		return y;
-	}
-	public void setY(int y) {
-		this.y = y;
+	public void update() {//depende del estado
+		states.getCurrent().update();
 	}
 }

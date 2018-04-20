@@ -1,56 +1,38 @@
 package states;
+import java.awt.*;
+import java.util.logging.*;
 
-import java.awt.Graphics;
-import java.awt.image.BufferedImage;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import interfaz.GameState;
-import singletons.ImageLoader;
+import Interfaces.*;
+import singletons.*;
 
 public class Starting implements GameState {
+	private ImageLoader img;
 	private GameContext gc;
-	private ImageLoader imsLoader= ImageLoader.getImageLoader();
-	private BufferedImage segundo;
-	private int segundos;
-
+	private int seconds;//el primer contador de 5..4...3..2..1..0
+	//constructor
 	public Starting(GameContext gc) {
-		this.gc=gc;
-		segundos= 6;
+		this.gc = gc;
+		img = ImageLoader.getLoader();
+		seconds = 5;
 	}
-	public void  starting() {
-		if(segundos < 0) {
-			gc.setCurrent(gc.getTurno1());
-		}else {
-			segundo=imsLoader.getImage("segundo"+ Integer.toString(segundos));
+	@Override
+	public void starting() { }
+	@Override
+	public void turn1() {
+		if(seconds < 0) {
+			gc.setCurrent(gc.getTurn1());
 		}
 	}
-
 	@Override
-	public void overrr() {
-
-	}
-
+	public void turn2() { }
 	@Override
-	public void pause() {
-
-	}
-
+	public void pause() { }
 	@Override
-	public void turno1() {
-
-	}
-
-	@Override
-	public void turno2() {
-
-	}
-
+	public void over() { }
 	@Override
 	public void render(Graphics g) {
-		g.drawImage(segundo, 318, 108,null); //114.5
+		g.drawImage(img.getImage("segundo" + Integer.toString(seconds)), 318, 108, null);
 	}
-
 	@Override
 	public void update() {
 		try {
@@ -58,9 +40,7 @@ public class Starting implements GameState {
 		}catch(InterruptedException ex){
 			Logger.getLogger(Starting.class.getName()).log(Level.SEVERE, null, ex);
 		}
-		
-		segundos -= 1;
-		starting();
+		seconds--;
+		turn1();
 	}
-
 }
