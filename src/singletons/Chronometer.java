@@ -1,21 +1,40 @@
 package singletons;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.swing.Timer;
 //es cronometro singleton
-public class Chronometer implements Runnable {
+public class Chronometer{
 	private static Chronometer chronometer;
-	private Thread time;
+	private Timer time;
+	private ActionListener action;
 	private int minutes;
 	private int seconds;
 	private int hundredths;//centesimas
 	//constructor
 	public Chronometer() {
-		time = new Thread(this);
 		//inicialisas el timepo
 		minutes = 0;
 		seconds = 0;
 		hundredths = 0;
+		action=new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				hundredths++;
+				if(hundredths == 100) {
+					hundredths = 0;//la centesima vuelve a cero
+					seconds++;//aumenta segundos
+				}
+				if(seconds == 60) {
+					seconds = 0;//los segundos vuelven a cero
+					minutes++;//aumenta minutos
+				}
+			}
+		};
+		time = new Timer (10, action);
 		//el thread corra
 		time.start();
 	}
@@ -36,24 +55,5 @@ public class Chronometer implements Runnable {
 	public void setHundredths(int hundredths) { this.hundredths = hundredths; }
 	//imprime tiempo
 	public String toString() { return minutes + ":" + seconds + ":" + hundredths; }	
-	@Override
-	public void run() {
-		while(true) {//mientras corra el juego, estaraejecutandose
-			try {//le doy sleep
-				Thread.sleep(10);
-			} catch (InterruptedException e) {
-				Logger.getLogger(Chronometer.class.getName()).log(Level.SEVERE, null, e);
-			}
-			//centesimas aumenta
-			hundredths++;
-			if(hundredths == 100) {
-				hundredths = 0;//la centesima vuelve a cero
-				seconds++;//aumenta segundos
-			}
-			if(seconds == 60) {
-				seconds = 0;//los segundos vuelven a cero
-				minutes++;//aumenta minutos
-			}
-		}
-	}
+
 }

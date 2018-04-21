@@ -4,20 +4,10 @@ import states.*;
 
 public class StateFactory {
 	private static StateFactory states;
-	private Starting start;
-	private Turn1 turn1;
-	private Turn2 turn2;
-	private Pause paused;
-	private Over overed;
-	private GameState current;
+	private GameContext gc;
 	//constructor
 	private StateFactory(GameContext gc) {
-		start = new Starting (gc);
-		turn1= new Turn1(gc);
-		turn2= new Turn2(gc);
-		paused= new Pause(gc);
-		overed= new Over(gc);
-		current = start;
+		this.gc =gc;
 	}
 	public static StateFactory getStates(GameContext gc) {
 		//si estados no existe lo crea
@@ -27,12 +17,15 @@ public class StateFactory {
 		//devuelve estado de factory
 		return states;
 	}
-	//solo getters
-	public Starting getStart() { return start; }
-	public Turn1 getTurn1() { return turn1; }
-	public Turn2 getTurn2() { return turn2; }
-	public Pause getPaused() { return paused; }
-	public Over getOvered() { return overed; }
-	public GameState getCurrent() { return current;	}
-	public void setCurrent(GameState current) { this.current = current; }
+	public GameState createState(int state) {
+		switch(state) {
+			case 0: return new Starting(gc);
+			case 1:	return new Turn1(gc);
+			case 2: return new Turn2(gc);
+			case 3: return new Pause(gc);
+			case 4: return new Over(gc);
+		}
+		return null;
+	}
+	
 }

@@ -10,9 +10,7 @@ public class Turn1 implements GameState{
 	private GameContext gc;//cambio de estados
 	private ImageLoader img;
 	private Hud hud;
-	private Collider pigCollider;//colisiones//botones
-	private Collider giraffeCollider;
-	private Collider cowCollider;
+	private Collider[] animalColliders;//colisiones//botones
 	private Collider pause;
 	private int selectedLetter;
 	private int isCorrect;
@@ -25,11 +23,14 @@ public class Turn1 implements GameState{
 		initComponents();	
 	}
 	private void initComponents( ) {
+		int x=100;
 		img = ImageLoader.getLoader();//accediendo a imageloader
 		hud = Hud.getHud();
-		pigCollider = new Collider(100, 60, 121, 121);
-		giraffeCollider = new Collider(373, 60, 121, 121);
-		cowCollider = new Collider(645, 60, 121, 121);
+		animalColliders= new Collider[3];
+		for(int i=0;i<3;i++) {//crea un colider para cada animal
+			animalColliders[i] = new Collider(x,60,121,121);  
+			x += 273;
+		}
 		pause = new Collider(412, 385, 41, 41);
 		selectedLetter = (int) (Math.random()*2);// es *2porque elarreglo llega hasta 2
 		isCorrect = -1;////variable para saber si laimagen esta correcta
@@ -86,7 +87,7 @@ public class Turn1 implements GameState{
 		//accede a las imagenes
 		g.drawImage(img.getImage("cerdo"), 100, 60, 121, 121, null);
 		g.drawImage(img.getImage("jirafa"), 373, 60, 121, 121, null);
-		g.drawImage(img.getImage("vaca"), 645, 60, 121, 121, null);
+		g.drawImage(img.getImage("vaca"), 646, 60, 121, 121, null);
 		g.drawImage(img.getImage("ask"), 213, 201, null);//imagen de la pregunta para la letra
 		switch (selectedLetter) {//para la letra seleccionada
 		case 0: g.drawImage(img.getImage("c"), 404, 260, 58, 80, null);//para cerdo
@@ -110,7 +111,6 @@ public class Turn1 implements GameState{
 			gc.setWinner(1);
 		}
 		over();//se termina
-		hud.update();//se  actualiza hud
 		if(isChronoPause) {//si el cronometro pausado
 			gc.getChronometer().setMinutes(lastMin);//reinician
 			gc.getChronometer().setSeconds(lastSec);
@@ -118,38 +118,19 @@ public class Turn1 implements GameState{
 			isChronoPause = false;//ya no esta pausado
 		}
 		if(gc.getX() != -1) {//colisiones para los clicks
-			if(pigCollider.getCollider().contains(gc.getX(), gc.getY())) {
-				if(selectedLetter == 0) {
-					hud.getTimesPlayer1().add(gc.getChronometer().toString());
-					hud.getRightPlayer1().add(0);
-					isCorrect = 1;
-				} else {
-					isCorrect = 0;
-					lives--;
+			for(int i=0;i<3;i++){
+				if(animalColliders[i].getCollider().contains(gc.getX(),gc.getY())) {
+					if(selectedLetter == i) {
+						hud.getTimesPlayer1().add(gc.getChronometer().toString());
+						hud.getRightPlayer1().add(i);
+						isCorrect = 1;
+					}else{
+						isCorrect = 0;
+						lives--;
+					}
 				}
-			} 
-			if(giraffeCollider.getCollider().contains(gc.getX(), gc.getY())) {
-				if(selectedLetter == 1) {
-					hud.getTimesPlayer1().add(gc.getChronometer().toString());
-					hud.getRightPlayer1().add(1);
-
-					isCorrect = 1;
-				} else {
-					isCorrect = 0;
-					lives--;
-				}
-			} 
-			if(cowCollider.getCollider().contains(gc.getX(), gc.getY())) {
-				if(selectedLetter == 2) {
-					hud.getTimesPlayer1().add(gc.getChronometer().toString());
-					hud.getRightPlayer1().add(2);
-
-					isCorrect = 1;
-				} else {
-					isCorrect = 0;
-					lives--;
-				}
-			} 
+			}
+			
 			if(pause.getCollider().contains(gc.getX(), gc.getY())) {//colisiones de clicks para el boton de pausa cuando esta jugando
 				lastMin = gc.getChronometer().getMinutes();
 				lastSec = gc.getChronometer().getSeconds();

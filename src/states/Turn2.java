@@ -10,9 +10,7 @@ public class Turn2 implements GameState{
 	private GameContext gc;
 	private ImageLoader img;
 	private Hud hud;
-	private Collider bugCollider;
-	private Collider turtleCollider;
-	private Collider rhinoCollider;
+	private Collider[] animalColliders;//colisiones//botones
 	private Collider pause;
 	private int selectedLetter;
 	private int isCorrect;
@@ -25,11 +23,14 @@ public class Turn2 implements GameState{
 		initComponents();
 	}
 	private void initComponents( ) {
+		int x=100;
 		img = ImageLoader.getLoader();
 		hud = Hud.getHud();	
-		bugCollider = new Collider(100, 60, 121, 121);
-		turtleCollider = new Collider(373, 60, 121, 121);
-		rhinoCollider = new Collider(645, 60, 121, 121);
+		animalColliders= new Collider[3];
+		for(int i=0;i<3;i++) {
+			animalColliders[i] = new Collider(x,60,121,121);  
+			x += 273;
+		}
 		pause = new Collider(412, 385, 41, 41);
 		selectedLetter = (int) (Math.random()*2);
 		isCorrect = -1;
@@ -83,7 +84,7 @@ public class Turn2 implements GameState{
 		hud.render(g);
 		g.drawImage(img.getImage("gusano"), 100, 60, 121, 121, null);
 		g.drawImage(img.getImage("tortuga"), 373, 60, 121, 121, null);
-		g.drawImage(img.getImage("rino"), 645, 60, 121, 121, null);
+		g.drawImage(img.getImage("rino"), 646, 60, 121, 121, null);
 		g.drawImage(img.getImage("ask"), 213, 201, null);
 		switch (selectedLetter) {
 		case 0: g.drawImage(img.getImage("g"), 404, 260, 58, 80, null);
@@ -107,7 +108,6 @@ public class Turn2 implements GameState{
 			gc.setWinner(2);
 		}
 		over();
-		hud.update();
 		if(isChronoPause) {
 			gc.getChronometer().setMinutes(lastMin);
 			gc.getChronometer().setSeconds(lastSec);
@@ -115,36 +115,18 @@ public class Turn2 implements GameState{
 			isChronoPause = false;
 		}
 		if(gc.getX() != -1) {
-			if(bugCollider.getCollider().contains(gc.getX(), gc.getY())) {
-				if(selectedLetter == 0) {
-					hud.getTimesPlayer2().add(gc.getChronometer().toString());
-					hud.getRightPlayer2().add(3);
-					isCorrect = 1;
-				} else {
-					isCorrect = 0;
-					lives--;
+			for(int i=0;i<3;i++){
+				if(animalColliders[i].getCollider().contains(gc.getX(),gc.getY())) {
+					if(selectedLetter == i) {
+						hud.getTimesPlayer2().add(gc.getChronometer().toString());
+						hud.getRightPlayer2().add(i+3);
+						isCorrect = 1;
+					}else{
+						isCorrect = 0;
+						lives--;
+					}
 				}
-			} 
-			if(turtleCollider.getCollider().contains(gc.getX(), gc.getY())) {
-				if(selectedLetter == 1) {
-					hud.getTimesPlayer2().add(gc.getChronometer().toString());
-					hud.getRightPlayer2().add(4);
-					isCorrect = 1;
-				} else {
-					isCorrect = 0;
-					lives--;
-				}
-			} 
-			if(rhinoCollider.getCollider().contains(gc.getX(), gc.getY())) {
-				if(selectedLetter == 2) {
-					hud.getTimesPlayer2().add(gc.getChronometer().toString());
-					hud.getRightPlayer2().add(5);
-					isCorrect = 1;
-				} else {
-					isCorrect = 0;
-					lives--;
-				}
-			} 
+			}
 			if(pause.getCollider().contains(gc.getX(), gc.getY())) {
 				lastMin = gc.getChronometer().getMinutes();
 				lastSec = gc.getChronometer().getSeconds();

@@ -6,8 +6,10 @@ import singletons.*;
 
 public class GameContext {
 	private ImageLoader img;
-	private StateFactory states;
+	private StateFactory statesFactory;
 	private Chronometer chronometer;
+	private GameState[] states;
+	private GameState current;
 	private int x;
 	private int y;
 	private int winner;//saber que jugador gano
@@ -15,8 +17,14 @@ public class GameContext {
 	//constructor
 	public GameContext() {
 		img = ImageLoader.getLoader();//recupera el loader
-		states = StateFactory.getStates(this);//obtiene el estado
+		statesFactory = StateFactory.getStates(this);//obtiene el estado
 		chronometer = Chronometer.getChronometer();//recupero el cronometro
+		states= new GameState[5];
+		for(int i=0;i<5;i++) {
+			states[i] = statesFactory.createState(i);
+			System.out.println(states[i].getClass());
+		}
+		current = states[0];
 		winner = -1;//inicio en -1 porque no se sabe aun quien haganado
 		resume = -1;//saber a que turno regresar
 	}
@@ -30,17 +38,17 @@ public class GameContext {
 	public int getResume(){ return resume; }
 	public void setResume(int resume){ this.resume = resume; }
 	public Chronometer getChronometer(){ return chronometer; }
-	public void setCurrent(GameState gs){ states.setCurrent(gs); }
-	public GameState getStart(){ return states.getStart(); }
-	public GameState getTurn1(){ return states.getTurn1(); }
-	public GameState getTurn2(){ return states.getTurn2(); }
-	public GameState getPause(){ return states.getPaused(); }
-	public GameState getOver(){ return states.getOvered(); }
+	public void setCurrent(GameState gs){ current = gs; }
+	public GameState getStart(){ return states[0]; }
+	public GameState getTurn1(){ return states[1]; }
+	public GameState getTurn2(){ return states[2]; }
+	public GameState getPause(){ return states[3]; }
+	public GameState getOver(){ return states[4]; }
 	public void render(Graphics g) {//depende del estado
 		g.drawImage(img.getImage("background"), 0, 0, null);
-		states.getCurrent().render(g);
+		current.render(g);
 	}
 	public void update() {//depende del estado
-		states.getCurrent().update();
+		current.update();
 	}
 }

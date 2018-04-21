@@ -1,7 +1,10 @@
 package singletons;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.*;
 import java.util.logging.*;
+import javax.swing.Timer;
 
 public class Hud {
 	private static Hud hud;
@@ -11,6 +14,8 @@ public class Hud {
 	private ArrayList<String> timesPlayer1;
 	private ArrayList<String> timesPlayer2;
 	private int clock; //la imagen//este ira cambiandomis imagenes
+	private Timer time;
+	private ActionListener action;
 	//constructor
 	private Hud() {
 		img = ImageLoader.getLoader();
@@ -19,6 +24,18 @@ public class Hud {
 		timesPlayer1 = new ArrayList<String> ();
 		timesPlayer2 = new ArrayList<String> ();
 		clock = 1;
+		action = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(clock < 4) {
+					clock++;
+				} else {
+					clock = 1;
+				}
+			}
+		};
+		time= new Timer(500, action);
+		time.start();
 	}
 	public static Hud getHud() {
 		if(hud == null) {
@@ -93,16 +110,5 @@ public class Hud {
 			}
 		}
 	}
-	public void update() {
-		try {
-			Thread.sleep(500);
-		} catch (InterruptedException e) {
-			Logger.getLogger(Hud.class.getName()).log(Level.SEVERE, null, e);
-		}
-		if(clock < 4) {
-			clock++;
-		} else {
-			clock = 1;
-		}
-	}
+	public void update() { }
 }
